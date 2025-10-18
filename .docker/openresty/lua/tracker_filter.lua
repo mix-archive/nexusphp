@@ -1,6 +1,5 @@
 -- tracker_filter.lua
 
--- 简易 BEncode 编码器，只编码 {"failure reason": msg}
 local function bencode_error(msg)
     local key = "failure reason"
     return "d14:" .. key .. string.format("%d:%s", #msg, msg) .. "e"
@@ -13,7 +12,6 @@ local function reject(msg)
     ngx.exit(ngx.status)
 end
 
--- 常见浏览器 User-Agent 拒绝
 local common_browsers = {
     "Mozilla", "Chrome", "Safari", "Edge", "Firefox", "Opera", "Trident"
 }
@@ -43,18 +41,15 @@ local function is_valid_port(val)
 end
 
 local function main()
-    -- 拒绝浏览器 User-Agent
     local ua = ngx.var.http_user_agent
     if is_browser(ua) then
         return reject("Browser access blocked !")
     end
 
-    -- 拒绝 URL path 含 api/announce
     if ngx.var.uri and ngx.var.uri:find("api/announce") then
         return reject("Not support, please use announce.php")
     end
 
-    -- 获取 query 参数
     local args = ngx.req.get_uri_args()
 
     if args["auth_key"] then
@@ -102,7 +97,6 @@ local function main()
         end
     end
 
-    -- 一切 OK，放行
 end
 
 return main

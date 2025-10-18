@@ -252,6 +252,9 @@ if ($action == "takecontactanswered") {
     if (empty($_POST['setanswered'])) {
         stderr($lang_staffbox['std_sorry'], nexus_trans('nexus.select_one_please'));
     }
+    foreach ($_POST['setanswered'] as $id) {
+        if (!is_numeric($id)) die;
+    }
 
 if ($_POST['setdealt']){
 	$res = sql_query ("SELECT * FROM staffmessages WHERE answered=0 AND id IN (" . implode(", ", $_POST['setanswered']) . ")");

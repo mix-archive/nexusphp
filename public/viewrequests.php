@@ -422,6 +422,9 @@ else {
             if (empty($_POST["torrentid"])) stderr($lang_functions['std_error'], $lang_functions['std_target_not_exists']);
             else $torrentid = $_POST["torrentid"];
             if ($arr['userid'] == $CURUSER['id'] || get_user_class() >= UC_UPLOADER) {
+                foreach ($torrentid as $tid) {
+                    if (!is_numeric($tid)) die;
+                }
                 $amount = $arr["amount"] / count($torrentid);
                 sql_query("UPDATE requests SET finish = 'yes' WHERE id = " . $_POST["id"]);
                 sql_query("UPDATE resreq SET chosen = 'yes' WHERE reqid = " . $_POST["id"] . " AND ( torrentid = '" . join("' OR torrentid = '", $torrentid) . "' )") or sqlerr(__FILE__, __LINE__);
